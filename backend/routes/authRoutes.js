@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, "engageu_secret", { expiresIn: "1d" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.json({
         token,
@@ -50,7 +50,7 @@ router.post("/admin-register", async (req, res) => {
     const { name, email, password, secret } = req.body;
 
     // secret key to protect admin creation
-    if (secret !== "cbit_admin_2026") {
+    if (secret !== process.env.ADMIN_SECRET) {
         return res.status(403).json({ msg: "Invalid admin secret" });
     }
 
