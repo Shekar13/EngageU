@@ -14,11 +14,11 @@ export default function Events() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const eventsRes = await axios.get("http://localhost:5000/api/events");
+        const eventsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/events`);
         setEvents(eventsRes.data);
 
         if (USER_ID) {
-          const regRes = await axios.get(`http://localhost:5000/api/register/${USER_ID}`);
+          const regRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/register/${USER_ID}`);
           const regIds = new Set(regRes.data.map(reg => reg.eventId._id));
           setRegisteredEventIds(regIds);
         }
@@ -40,7 +40,7 @@ export default function Events() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/register", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
         userId: USER_ID,
         eventId
       });
@@ -49,7 +49,7 @@ export default function Events() {
       setRegisteredEventIds(prev => new Set(prev).add(eventId));
 
       // Refresh events to update spot count
-      const eventsRes = await axios.get("http://localhost:5000/api/events");
+      const eventsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/events`);
       setEvents(eventsRes.data);
 
       alert("Registered Successfully 🎉");

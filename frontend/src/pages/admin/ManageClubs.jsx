@@ -12,14 +12,14 @@ export default function ManageClubs() {
     }, []);
 
     const fetchClubs = async () => {
-        const res = await axios.get("http://localhost:5000/api/clubs");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/clubs`);
         setClubs(res.data);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/clubs", formData); // Assuming POST /api/clubs
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/clubs`, formData); // Assuming POST /api/clubs
             setFormData({ name: "", description: "", recruiting: false });
             setShowForm(false);
             fetchClubs();
@@ -40,7 +40,7 @@ export default function ManageClubs() {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this club?")) return;
         try {
-            await axios.delete(`http://localhost:5000/api/clubs/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/clubs/${id}`);
             fetchClubs();
         } catch (err) {
             alert("Failed to delete club. API might not support delete yet.");

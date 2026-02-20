@@ -12,14 +12,14 @@ export default function ManageEvents() {
     }, []);
 
     const fetchEvents = async () => {
-        const res = await axios.get("http://localhost:5000/api/events");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/events`);
         setEvents(res.data);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/events", formData); // Assuming POST /api/events creates an event
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/events`, formData); // Assuming POST /api/events creates an event
             setFormData({ title: "", description: "", date: "", venue: "" });
             setShowForm(false);
             fetchEvents();
@@ -33,7 +33,7 @@ export default function ManageEvents() {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this event?")) return;
         try {
-            await axios.delete(`http://localhost:5000/api/events/${id}`); // Assuming DELETE /api/events/:id
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/events/${id}`); // Assuming DELETE /api/events/:id
             fetchEvents();
         } catch (err) {
             alert("Failed to delete event. API might not support delete yet.");

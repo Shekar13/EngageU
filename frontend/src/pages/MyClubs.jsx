@@ -12,7 +12,7 @@ export default function MyClubs() {
   useEffect(() => {
     if (!USER_ID) return;
 
-    axios.get(`http://localhost:5000/api/apply/${USER_ID}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/apply/${USER_ID}`)
       .then(res => {
         setMyClubs(res.data);
         setLoading(false);

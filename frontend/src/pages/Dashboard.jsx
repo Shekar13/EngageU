@@ -12,7 +12,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (!USER_ID) return;
 
-    axios.get(`http://localhost:5000/api/register/${USER_ID}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/register/${USER_ID}`)
       .then(res => {
         setMyEvents(res.data);
         setLoading(false);

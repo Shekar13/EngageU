@@ -22,8 +22,8 @@ export default function Admin() {
     const fetchData = async () => {
       try {
         const [regRes, appRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/admin/registrations", { headers: { userid: user.id } }),
-          axios.get("http://localhost:5000/api/admin/applications", { headers: { userid: user.id } })
+          axios.get(`${import.meta.env.VITE_API_URL}/api/admin/registrations`, { headers: { userid: user.id } }),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/admin/applications`, { headers: { userid: user.id } })
         ]);
         setRegistrations(regRes.data);
         setApplications(appRes.data);
@@ -71,7 +71,7 @@ export default function Admin() {
   const updateApplicationStatus = async (id, status, interviewLink = "", interviewDate = "", interviewTime = "") => {
     console.log(`Updating app ${id} to ${status}`);
     try {
-      const response = await axios.put(`http://localhost:5000/api/apply/${id}`, {
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/apply/${id}`, {
         status,
         interviewLink,
         interviewDate,

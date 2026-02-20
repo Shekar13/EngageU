@@ -14,11 +14,11 @@ export default function Clubs() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const clubsRes = await axios.get("http://localhost:5000/api/clubs");
+        const clubsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/clubs`);
         setClubs(clubsRes.data);
 
         if (USER_ID) {
-          const appsRes = await axios.get(`http://localhost:5000/api/apply/${USER_ID}`);
+          const appsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/apply/${USER_ID}`);
           const appIds = new Set(appsRes.data.map(app => app.clubId._id));
           setAppliedClubIds(appIds);
         }
@@ -40,7 +40,7 @@ export default function Clubs() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/apply", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/apply`, {
         userId: USER_ID,
         clubId
       });
@@ -87,8 +87,8 @@ export default function Clubs() {
                           onClick={() => !isApplied && applyClub(club._id)}
                           variant={isApplied ? "secondary" : "secondary"}
                           className={`w-full ${isApplied
-                              ? "bg-yellow-50 text-yellow-600 border-yellow-200 cursor-default hover:shadow-none hover:bg-yellow-50"
-                              : "border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600"
+                            ? "bg-yellow-50 text-yellow-600 border-yellow-200 cursor-default hover:shadow-none hover:bg-yellow-50"
+                            : "border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600"
                             }`}
                           disabled={isApplied}
                         >
