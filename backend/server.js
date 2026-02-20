@@ -19,9 +19,9 @@ app.use("/api/admin", require("./routes/adminRoutes"));
 
 
 // MongoDB connection
-mongoose.connect("mongodb://127.0.0.1:27017/engageU")
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/engageU")
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log(err));
 
 app.use("/api/auth", require("./routes/authRoutes"));
 
@@ -30,6 +30,10 @@ app.get("/", (req, res) => {
     res.send("EngageU API is running...");
 });
 
-app.listen(5000, () => {
-    console.log("Server running on port 5000");
-});
+if (require.main === module) {
+    app.listen(5000, () => {
+        console.log("Server running on port 5000");
+    });
+}
+
+module.exports = app;
