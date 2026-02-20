@@ -21,9 +21,9 @@ export default function Dashboard() {
   }, [USER_ID]);
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 px-8 pb-12">
+    <div className="min-h-screen bg-slate-50 pt-20 md:pt-24 px-4 md:px-8 pb-12">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-primary-500 pl-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 border-l-4 border-primary-500 pl-4">
           My Registered Events
         </h2>
 

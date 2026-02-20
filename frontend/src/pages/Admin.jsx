@@ -125,12 +125,12 @@ export default function Admin() {
   const toggleEvent = (id) => setExpandedEventId(expandedEventId === id ? null : id);
   const toggleClub = (id) => setExpandedClubId(expandedClubId === id ? null : id);
 
-  if (!user) return <div className="min-h-screen pt-24 px-8 text-center text-gray-500">Please login as admin</div>;
+  if (!user) return <div className="min-h-screen pt-24 px-4 md:px-8 text-center text-gray-500">Please login as admin</div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 px-8 pb-12">
+    <div className="min-h-screen bg-slate-50 pt-20 md:pt-24 px-4 md:px-8 pb-12">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 mb-8 border-b border-gray-200 pb-4">
+        <h2 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 mb-8 border-b border-gray-200 pb-4">
           Admin Dashboard
         </h2>
 
@@ -157,11 +157,11 @@ export default function Admin() {
                       className="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition-colors text-left outline-none"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-xs">
+                        <div className="h-8 w-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-xs shrink-0">
                           {group.users.length}
                         </div>
                         <div>
-                          <h4 className="font-semibold text-gray-800">{group.event.title}</h4>
+                          <h4 className="font-semibold text-gray-800 line-clamp-1">{group.event.title}</h4>
                           <p className="text-xs text-gray-500">{group.event.date}</p>
                         </div>
                       </div>
@@ -175,12 +175,12 @@ export default function Admin() {
                       <div className="bg-gray-50 p-4 border-t border-gray-100">
                         <ul className="space-y-3">
                           {group.users.map(reg => (
-                            <li key={reg._id} className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                            <li key={reg._id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-white p-3 rounded-lg shadow-sm border border-gray-100">
                               <div>
                                 <p className="font-medium text-sm text-gray-800">{reg.userId?.name || "Unknown"}</p>
-                                <p className="text-xs text-gray-500">{reg.userId?.email}</p>
+                                <p className="text-xs text-gray-500 break-all">{reg.userId?.email}</p>
                               </div>
-                              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Registered</span>
+                              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded shrink-0">Registered</span>
                             </li>
                           ))}
                         </ul>
@@ -213,11 +213,11 @@ export default function Admin() {
                       className="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition-colors text-left outline-none"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-secondary-100 text-secondary-600 flex items-center justify-center font-bold text-xs">
+                        <div className="h-8 w-8 rounded-full bg-secondary-100 text-secondary-600 flex items-center justify-center font-bold text-xs shrink-0">
                           {group.applicants.length}
                         </div>
                         <div>
-                          <h4 className="font-semibold text-gray-800">{group.club.name}</h4>
+                          <h4 className="font-semibold text-gray-800 line-clamp-1">{group.club.name}</h4>
                           <p className="text-xs text-gray-500">Club Application</p>
                         </div>
                       </div>
@@ -232,12 +232,12 @@ export default function Admin() {
                         <ul className="space-y-4">
                           {group.applicants.map(a => (
                             <li key={a._id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                              <div className="flex justify-between items-start mb-3">
+                              <div className="flex flex-col sm:flex-row justify-between items-start mb-3 gap-2">
                                 <div>
                                   <p className="font-medium text-sm text-gray-900">{a.userId?.name || "Unknown"}</p>
-                                  <p className="text-xs text-gray-500">{a.userId?.email}</p>
+                                  <p className="text-xs text-gray-500 break-all">{a.userId?.email}</p>
                                 </div>
-                                <span className={`px-2 py-1 rounded-full text-xs font-bold 
+                                <span className={`px-2 py-1 rounded-full text-xs font-bold shrink-0
                                                 ${a.status === 'Approved' ? 'bg-green-100 text-green-700' :
                                     a.status === 'Rejected' ? 'bg-red-100 text-red-700' :
                                       a.status === 'Interview Scheduled' ? 'bg-blue-100 text-blue-700' :
@@ -246,7 +246,7 @@ export default function Admin() {
                                 </span>
                               </div>
 
-                              <div className="flex flex-wrap justify-end gap-2">
+                              <div className="flex flex-wrap justify-start sm:justify-end gap-2">
                                 {a.status !== 'Approved' && a.status !== 'Rejected' && (
                                   <>
                                     {a.status !== 'Interview Scheduled' && (
@@ -273,8 +273,8 @@ export default function Admin() {
                                 )}
                               </div>
                               {a.status === 'Interview Scheduled' && a.interviewLink && (
-                                <div className="mt-2 pt-2 border-t border-gray-100 text-right">
-                                  <a href={a.interviewLink} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline">
+                                <div className="mt-2 pt-2 border-t border-gray-100 text-left sm:text-right">
+                                  <a href={a.interviewLink} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline break-all">
                                     Join Meet
                                   </a>
                                   <p className="text-xs text-gray-400 mt-1">

@@ -41,10 +41,10 @@ export default function ManageEvents() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 pt-24 px-8 pb-12">
+        <div className="min-h-screen bg-slate-50 pt-20 md:pt-24 px-4 md:px-8 pb-12">
             <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-800">Manage Events</h2>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Manage Events</h2>
                     <Button onClick={() => setShowForm(!showForm)}>
                         {showForm ? "Cancel" : "+ Add New Event"}
                     </Button>
@@ -121,14 +121,14 @@ export default function ManageEvents() {
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="text-left">
                         {events.map((event) => (
-                            <div key={event._id} className="p-4 border-b last:border-b-0 hover:bg-gray-50 flex justify-between items-center transition">
+                            <div key={event._id} className="p-4 border-b last:border-b-0 hover:bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center transition gap-2">
                                 <div>
-                                    <h4 className="font-bold text-lg text-gray-800">{event.title}</h4>
+                                    <h4 className="font-bold text-lg text-gray-800 break-words">{event.title}</h4>
                                     <p className="text-gray-500 text-sm">{event.date} • {event.venue}</p>
                                 </div>
                                 <button
                                     onClick={() => handleDelete(event._id)}
-                                    className="text-red-500 hover:text-red-700 font-medium text-sm px-3 py-1 rounded hover:bg-red-50 transition"
+                                    className="text-red-500 hover:text-red-700 font-medium text-sm px-3 py-1 rounded hover:bg-red-50 transition self-end sm:self-auto"
                                 >
                                     Delete
                                 </button>

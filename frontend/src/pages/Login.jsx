@@ -33,7 +33,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-indigo-50 to-purple-50 p-4">
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-indigo-50 to-purple-50 px-4 pt-20 md:pt-0">
       <div className="glass-card p-8 rounded-2xl w-full max-w-md animate-fade-in">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600">Welcome Back</h2>

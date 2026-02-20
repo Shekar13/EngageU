@@ -59,10 +59,10 @@ export default function Events() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 px-8 pb-12">
+    <div className="min-h-screen bg-slate-50 pt-20 md:pt-24 px-4 md:px-8 pb-12">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 mb-4 animate-fade-in">
+          <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 mb-4 animate-fade-in">
             Upcoming Events
           </h2>
           <p className="text-gray-500 max-w-2xl mx-auto animate-slide-up">

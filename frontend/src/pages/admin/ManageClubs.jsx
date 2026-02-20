@@ -48,10 +48,10 @@ export default function ManageClubs() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 pt-24 px-8 pb-12">
+        <div className="min-h-screen bg-slate-50 pt-20 md:pt-24 px-4 md:px-8 pb-12">
             <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-800">Manage Clubs</h2>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Manage Clubs</h2>
                     <Button onClick={() => setShowForm(!showForm)}>
                         {showForm ? "Cancel" : "+ Add New Club"}
                     </Button>
@@ -94,9 +94,9 @@ export default function ManageClubs() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {clubs.map((club) => (
                         <div key={club._id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                            <div className="flex justify-between items-start mb-4">
-                                <h4 className="font-bold text-xl text-gray-800">{club.name}</h4>
-                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${club.recruiting ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                            <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-2">
+                                <h4 className="font-bold text-xl text-gray-800 break-words">{club.name}</h4>
+                                <span className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 ${club.recruiting ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                                     {club.recruiting ? 'Recruiting' : 'Closed'}
                                 </span>
                             </div>
