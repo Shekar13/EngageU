@@ -24,6 +24,11 @@ app.get("/", (req, res) => {
 });
 
 // MongoDB Connection + Server Start
+if (!process.env.MONGODB_URI) {
+  console.error("❌ Error: MONGODB_URI environment variable is not defined");
+  process.exit(1);
+}
+
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("✅ MongoDB Connected: Application is ready");
