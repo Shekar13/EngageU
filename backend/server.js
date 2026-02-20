@@ -29,9 +29,35 @@ if (!process.env.MONGODB_URI) {
   process.exit(1);
 }
 
+const User = require("./models/User");
+const bcrypt = require("bcryptjs");
+
+// Seed Admin User
+const seedAdmin = async () => {
+  try {
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@engageu.com";
+    const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+
+    const adminExists = await User.findOne({ email: adminEmail });
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
+      await User.create({
+        name: "Default Admin",
+        email: adminEmail,
+        password: hashedPassword,
+        role: "admin"
+      });
+      console.log("💎 Default Admin account created successfully");
+    }
+  } catch (error) {
+    console.error("❌ Error seeding admin:", error);
+  }
+};
+
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
+  .then(async () => {
     console.log("✅ MongoDB Connected: Application is ready");
+    await seedAdmin();
 
     const PORT = process.env.PORT || 5000;
 

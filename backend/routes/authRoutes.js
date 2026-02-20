@@ -16,10 +16,11 @@ router.post("/register", async (req, res) => {
     const user = await User.create({
         name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        role: "student"
     });
 
-    res.json({ msg: "User registered successfully" });
+    res.json({ msg: "User registered successfully", role: "student" });
 });
 
 // LOGIN
@@ -43,30 +44,6 @@ router.post("/login", async (req, res) => {
             role: user.role
         }
     });
-});
-
-// ADMIN SIGNUP (secret)
-router.post("/admin-register", async (req, res) => {
-    const { name, email, password, secret } = req.body;
-
-    // secret key to protect admin creation
-    if (secret !== process.env.ADMIN_SECRET) {
-        return res.status(403).json({ msg: "Invalid admin secret" });
-    }
-
-    const userExists = await User.findOne({ email });
-    if (userExists) return res.status(400).json({ msg: "User already exists" });
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const admin = await User.create({
-        name,
-        email,
-        password: hashedPassword,
-        role: "admin"
-    });
-
-    res.json({ msg: "Admin account created" });
 });
 
 
