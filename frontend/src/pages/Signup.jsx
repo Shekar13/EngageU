@@ -27,7 +27,18 @@ export default function Signup() {
       alert("Registered successfully. Please login.");
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed. User may already exist.");
+      console.error(err);
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setError(err.response.data.msg || err.response.data.message || "Registration failed. Please try again.");
+      } else if (err.request) {
+        // The request was made but no response was received
+        setError("No response from server. Please ensure the backend is running.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError("Error: " + err.message);
+      }
     } finally {
       setIsLoading(false);
     }
