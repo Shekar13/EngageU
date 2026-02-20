@@ -26,7 +26,18 @@ export default function Login() {
 
       navigate("/events");
     } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      console.error(err);
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setError(err.response.data.msg || "Invalid email or password. Please try again.");
+      } else if (err.request) {
+        // The request was made but no response was received
+        setError("No response from server. Please ensure the backend is running.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError("Error: " + err.message);
+      }
     } finally {
       setIsLoading(false);
     }
