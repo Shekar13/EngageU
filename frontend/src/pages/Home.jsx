@@ -42,25 +42,7 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Stats Grid - Optional visual flair */}
-        <div className="mt-20 grid grid-cols-2 gap-8 md:grid-cols-4 animate-fade-in opacity-0" style={{ animationDelay: '0.8s', animationFillMode: 'forwards' }}>
-          <div className="flex flex-col items-center">
-            <span className="text-3xl font-bold text-primary-600">50+</span>
-            <span className="text-gray-500 text-sm">Active Clubs</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-3xl font-bold text-secondary-600">100+</span>
-            <span className="text-gray-500 text-sm">Monthly Events</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-3xl font-bold text-pink-500">2k+</span>
-            <span className="text-gray-500 text-sm">Students</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-3xl font-bold text-teal-500">24/7</span>
-            <span className="text-gray-500 text-sm">Support</span>
-          </div>
-        </div>
+
       </div>
     </div>
   );
