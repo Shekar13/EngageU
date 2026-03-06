@@ -12,8 +12,9 @@ import Admin from "./pages/Admin";
 import ManageEvents from "./pages/admin/ManageEvents";
 import ManageClubs from "./pages/admin/ManageClubs";
 import AdminRoute from "./components/AdminRoute";
-
-
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/clubs" element={<Clubs />} />
 
         <Route
@@ -34,6 +37,14 @@ function App() {
             </ProtectedRoute>
           }
 
+        />
+        <Route
+          path="/change-password"
+          element={
+            <ProtectedRoute>
+              <ChangePassword />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/myclubs"

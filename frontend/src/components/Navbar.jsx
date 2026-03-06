@@ -5,7 +5,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "admin" || user?.role === "club_admin";
 
   const logout = () => {
     localStorage.clear();
@@ -36,7 +36,9 @@ export default function Navbar() {
               <>
                 <Link to="/admin" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">Dashboard</Link>
                 <Link to="/admin/events" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">Manage Events</Link>
-                <Link to="/admin/clubs" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">Manage Clubs</Link>
+                {user?.role === "admin" && (
+                  <Link to="/admin/clubs" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">Manage Clubs</Link>
+                )}
               </>
             ) : (
               // Student Menu
@@ -68,6 +70,12 @@ export default function Navbar() {
               ) : (
                 <div className="flex items-center gap-4">
                   <span className="text-sm text-gray-500 hidden lg:block">Hi, {user.name}</span>
+                  <Link
+                    to="/change-password"
+                    className="text-gray-600 hover:text-primary-600 font-medium transition-colors text-sm"
+                  >
+                    Change Password
+                  </Link>
                   <button
                     onClick={logout}
                     className="text-red-500 hover:text-red-600 font-medium border border-red-200 hover:border-red-300 px-4 py-1.5 rounded-full transition-all text-sm"
@@ -115,7 +123,9 @@ export default function Navbar() {
               <>
                 <Link to="/admin" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Dashboard</Link>
                 <Link to="/admin/events" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Manage Events</Link>
-                <Link to="/admin/clubs" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Manage Clubs</Link>
+                {user?.role === "admin" && (
+                  <Link to="/admin/clubs" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Manage Clubs</Link>
+                )}
               </>
             ) : (
               <>
@@ -153,6 +163,13 @@ export default function Navbar() {
                     <div className="text-sm font-medium leading-none text-gray-500 mt-1">{user.email}</div>
                   </div>
                 </div>
+                <Link
+                  to="/change-password"
+                  onClick={closeMenu}
+                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 mb-2"
+                >
+                  Change Password
+                </Link>
                 <button
                   onClick={logout}
                   className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-800 hover:bg-red-50"

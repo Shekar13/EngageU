@@ -8,7 +8,8 @@ const eventSchema = new mongoose.Schema({
     maxCapacity: { type: Number, default: 0 }, // 0 means unlimited
     registeredCount: { type: Number, default: 0 },
     isPaid: { type: Boolean, default: false },
-    price: { type: Number, default: 0 }
+    price: { type: Number, default: 0 },
+    clubId: { type: mongoose.Schema.Types.ObjectId, ref: 'Club' }
 });
 
 module.exports = mongoose.model("Event", eventSchema);

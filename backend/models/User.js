@@ -14,8 +14,10 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: "student"   // admin or student
-    }
+        default: "student"   // admin, club_admin, or student
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date
 });
 
 module.exports = mongoose.model("User", userSchema);

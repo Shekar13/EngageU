@@ -4,12 +4,19 @@ import Button from "../../components/Button";
 
 export default function ManageClubs() {
     const [clubs, setClubs] = useState([]);
-    const [formData, setFormData] = useState({ name: "", description: "", recruiting: false });
+    const [formData, setFormData] = useState({ name: "", description: "", recruiting: false, adminEmail: "" });
     const [showForm, setShowForm] = useState(false);
+    const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
-        fetchClubs();
-    }, []);
+        if (user?.role === "admin") {
+            fetchClubs();
+        }
+    }, [user?.role]);
+
+    if (!user || user.role !== "admin") {
+        return <div className="min-h-screen pt-24 px-4 text-center text-gray-500">Access denied. Super Admin only.</div>;
+    }
 
     const fetchClubs = async () => {
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/clubs`);
@@ -19,13 +26,15 @@ export default function ManageClubs() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/clubs`, formData); // Assuming POST /api/clubs
-            setFormData({ name: "", description: "", recruiting: false });
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/clubs`, formData, {
+                headers: { userid: user?.id }
+            });
+            setFormData({ name: "", description: "", recruiting: false, adminEmail: "" });
             setShowForm(false);
             fetchClubs();
             alert("Club created successfully!");
         } catch (err) {
-            alert("Failed to create club");
+            alert(err.response?.data?.msg || "Failed to create club");
         }
     };
 
@@ -40,7 +49,9 @@ export default function ManageClubs() {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this club?")) return;
         try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/api/clubs/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/clubs/${id}`, {
+                headers: { userid: user?.id }
+            });
             fetchClubs();
         } catch (err) {
             alert("Failed to delete club. API might not support delete yet.");
@@ -75,6 +86,13 @@ export default function ManageClubs() {
                                 value={formData.description}
                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                                 required
+                            />
+                            <input
+                                type="email"
+                                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-secondary-500 outline-none transition"
+                                placeholder="Club Admin's Email (Optional)"
+                                value={formData.adminEmail || ""}
+                                onChange={e => setFormData({ ...formData, adminEmail: e.target.value })}
                             />
                             <div className="flex items-center gap-2">
                                 <input

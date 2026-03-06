@@ -4,7 +4,7 @@ const Event = require("../models/Event");
 const admin = require("../middleware/admin");
 
 // Add Event (Admin later)
-router.post("/", async (req, res) => {
+router.post("/", admin, async (req, res) => {
   const event = await Event.create(req.body);
   res.json(event);
 });
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // Delete Event
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", admin, async (req, res) => {
   try {
     await Event.findByIdAndDelete(req.params.id);
     res.json({ msg: "Event deleted" });
