@@ -6,44 +6,73 @@ export default function ManageClubs() {
     const [clubs, setClubs] = useState([]);
     const [formData, setFormData] = useState({ name: "", description: "", recruiting: false, adminEmail: "" });
     const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState(null);
     const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
-        if (user?.role === "admin") {
+        if (user?.role === "admin" || user?.role === "club_admin") {
             fetchClubs();
         }
     }, [user?.role]);
 
-    if (!user || user.role !== "admin") {
-        return <div className="min-h-screen pt-24 px-4 text-center text-gray-500">Access denied. Super Admin only.</div>;
+    if (!user || (user.role !== "admin" && user.role !== "club_admin")) {
+        return <div className="min-h-screen pt-24 px-4 text-center text-gray-500">Access denied. Admin or Club Admin only.</div>;
     }
 
     const fetchClubs = async () => {
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/clubs`);
-        setClubs(res.data);
+        let fetchedClubs = res.data;
+        if (user?.role === "club_admin") {
+            fetchedClubs = fetchedClubs.filter(c => c.admins && c.admins.includes(user.id));
+        }
+        setClubs(fetchedClubs);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/clubs`, formData, {
-                headers: { userid: user?.id }
-            });
+            if (editingId) {
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/clubs/${editingId}`, formData, {
+                    headers: { userid: user?.id }
+                });
+                alert("Club updated successfully!");
+            } else {
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/clubs`, formData, {
+                    headers: { userid: user?.id }
+                });
+                alert("Club created successfully!");
+            }
             setFormData({ name: "", description: "", recruiting: false, adminEmail: "" });
             setShowForm(false);
+            setEditingId(null);
             fetchClubs();
-            alert("Club created successfully!");
         } catch (err) {
-            alert(err.response?.data?.msg || "Failed to create club");
+            alert(err.response?.data?.msg || `Failed to ${editingId ? 'update' : 'create'} club`);
         }
     };
 
+    const handleEdit = (club) => {
+        setFormData({
+            name: club.name,
+            description: club.description,
+            recruiting: club.recruiting,
+            adminEmail: "" // We keep it empty, backend updates only if provided
+        });
+        setEditingId(club._id);
+        setShowForm(true);
+    };
+
     const toggleRecruitment = async (club) => {
-        // This assumes an update endpoint exists or logic needs implementation
-        // For now, let's assume we can PUT /api/clubs/:id
-        // If not implemented in backend, this button might just be UI for now.
-        // I will add a placeholder alert.
-        alert("Toggle recruitment feature requires backend update endpoint. Assuming it exists for UI demo.");
+        try {
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/clubs/${club._id}`, {
+                recruiting: !club.recruiting
+            }, {
+                headers: { userid: user?.id }
+            });
+            fetchClubs();
+        } catch (err) {
+            alert("Failed to update recruitment status.");
+        }
     };
 
     const handleDelete = async (id) => {
@@ -63,14 +92,24 @@ export default function ManageClubs() {
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Manage Clubs</h2>
-                    <Button onClick={() => setShowForm(!showForm)}>
-                        {showForm ? "Cancel" : "+ Add New Club"}
-                    </Button>
+                    {user?.role === "admin" && (
+                        <Button onClick={() => {
+                            if (showForm) {
+                                setShowForm(false);
+                                setEditingId(null);
+                                setFormData({ name: "", description: "", recruiting: false, adminEmail: "" });
+                            } else {
+                                setShowForm(true);
+                            }
+                        }}>
+                            {showForm ? "Cancel" : "+ Add New Club"}
+                        </Button>
+                    )}
                 </div>
 
                 {showForm && (
                     <div className="bg-white p-6 rounded-2xl shadow-lg mb-8 animate-fade-in border border-gray-100">
-                        <h3 className="text-xl font-bold mb-4">Add New Club</h3>
+                        <h3 className="text-xl font-bold mb-4">{editingId ? "Edit Club" : "Add New Club"}</h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <input
                                 className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-secondary-500 outline-none transition"
@@ -87,13 +126,15 @@ export default function ManageClubs() {
                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                                 required
                             />
-                            <input
-                                type="email"
-                                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-secondary-500 outline-none transition"
-                                placeholder="Club Admin's Email (Optional)"
-                                value={formData.adminEmail || ""}
-                                onChange={e => setFormData({ ...formData, adminEmail: e.target.value })}
-                            />
+                            {user?.role === "admin" && (
+                                <input
+                                    type="email"
+                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-secondary-500 outline-none transition"
+                                    placeholder={editingId ? "New Admin Email (Leave blank to keep current)" : "Club Admin's Email (Optional)"}
+                                    value={formData.adminEmail || ""}
+                                    onChange={e => setFormData({ ...formData, adminEmail: e.target.value })}
+                                />
+                            )}
                             <div className="flex items-center gap-2">
                                 <input
                                     type="checkbox"
@@ -104,7 +145,7 @@ export default function ManageClubs() {
                                 />
                                 <label htmlFor="recruiting" className="text-gray-700">Open for Recruitment?</label>
                             </div>
-                            <Button type="submit" variant="secondary" className="w-full">Create Club</Button>
+                            <Button type="submit" variant="secondary" className="w-full">{editingId ? "Update Club" : "Create Club"}</Button>
                         </form>
                     </div>
                 )}
@@ -121,11 +162,27 @@ export default function ManageClubs() {
                             <p className="text-gray-600 mb-6 text-sm">{club.description}</p>
                             <div className="flex gap-2 justify-end">
                                 <button
-                                    onClick={() => handleDelete(club._id)}
-                                    className="text-red-500 hover:bg-red-50 px-3 py-1.5 rounded text-sm transition font-medium"
+                                    onClick={() => toggleRecruitment(club)}
+                                    className={`px-3 py-1.5 rounded text-sm transition font-medium ${club.recruiting ? 'text-amber-600 hover:bg-amber-50' : 'text-green-600 hover:bg-green-50'}`}
                                 >
-                                    Delete Club
+                                    {club.recruiting ? 'Close Recruitment' : 'Start Recruitment'}
                                 </button>
+                                {user?.role === "admin" && (
+                                    <>
+                                        <button
+                                            onClick={() => handleEdit(club)}
+                                            className="text-secondary-600 hover:text-secondary-800 px-3 py-1.5 rounded text-sm transition font-medium hover:bg-secondary-50"
+                                        >
+                                            Edit Club
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(club._id)}
+                                            className="text-red-500 hover:bg-red-50 px-3 py-1.5 rounded text-sm transition font-medium"
+                                        >
+                                            Delete Club
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     ))}

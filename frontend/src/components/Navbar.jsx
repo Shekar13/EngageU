@@ -36,9 +36,7 @@ export default function Navbar() {
               <>
                 <Link to="/admin" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">Dashboard</Link>
                 <Link to="/admin/events" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">Manage Events</Link>
-                {user?.role === "admin" && (
-                  <Link to="/admin/clubs" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">Manage Clubs</Link>
-                )}
+                <Link to="/admin/clubs" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">Manage Clubs</Link>
               </>
             ) : (
               // Student Menu
@@ -123,9 +121,7 @@ export default function Navbar() {
               <>
                 <Link to="/admin" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Dashboard</Link>
                 <Link to="/admin/events" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Manage Events</Link>
-                {user?.role === "admin" && (
-                  <Link to="/admin/clubs" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Manage Clubs</Link>
-                )}
+                <Link to="/admin/clubs" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Manage Clubs</Link>
               </>
             ) : (
               <>

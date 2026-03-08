@@ -7,6 +7,7 @@ export default function ManageEvents() {
     const [clubs, setClubs] = useState([]);
     const [formData, setFormData] = useState({ title: "", description: "", date: "", venue: "", clubId: "" });
     const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState(null);
 
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -46,17 +47,40 @@ export default function ManageEvents() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/events`, formData, {
-                headers: { userid: user?.id }
-            });
+            if (editingId) {
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/events/${editingId}`, formData, {
+                    headers: { userid: user?.id }
+                });
+                alert("Event updated successfully!");
+            } else {
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/events`, formData, {
+                    headers: { userid: user?.id }
+                });
+                alert("Event created successfully!");
+            }
             setFormData({ title: "", description: "", date: "", venue: "", clubId: clubs.length > 0 && user?.role === "club_admin" ? clubs[0]._id : "" });
             setShowForm(false);
+            setEditingId(null);
             fetchData();
-            alert("Event created successfully!");
         } catch (err) {
             console.error(err);
-            alert("Failed to create event");
+            alert(`Failed to ${editingId ? 'update' : 'create'} event`);
         }
+    };
+
+    const handleEdit = (event) => {
+        setFormData({
+            title: event.title,
+            description: event.description,
+            date: event.date,
+            venue: event.venue,
+            clubId: event.clubId,
+            maxCapacity: event.maxCapacity || "",
+            isPaid: event.isPaid || false,
+            price: event.price || ""
+        });
+        setEditingId(event._id);
+        setShowForm(true);
     };
 
     const handleDelete = async (id) => {
@@ -76,14 +100,22 @@ export default function ManageEvents() {
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Manage Events</h2>
-                    <Button onClick={() => setShowForm(!showForm)}>
+                    <Button onClick={() => {
+                        if (showForm) {
+                            setShowForm(false);
+                            setEditingId(null);
+                            setFormData({ title: "", description: "", date: "", venue: "", clubId: clubs.length > 0 && user?.role === "club_admin" ? clubs[0]._id : "" });
+                        } else {
+                            setShowForm(true);
+                        }
+                    }}>
                         {showForm ? "Cancel" : "+ Add New Event"}
                     </Button>
                 </div>
 
                 {showForm && (
                     <div className="bg-white p-6 rounded-2xl shadow-lg mb-8 animate-fade-in border border-gray-100">
-                        <h3 className="text-xl font-bold mb-4">Create New Event</h3>
+                        <h3 className="text-xl font-bold mb-4">{editingId ? "Edit Event" : "Create New Event"}</h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <input
                                 className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition"
@@ -157,7 +189,7 @@ export default function ManageEvents() {
                                     />
                                 )}
                             </div>
-                            <Button type="submit" className="w-full">Create Event</Button>
+                            <Button type="submit" className="w-full">{editingId ? "Update Event" : "Create Event"}</Button>
                         </form>
                     </div>
                 )}
@@ -170,12 +202,20 @@ export default function ManageEvents() {
                                     <h4 className="font-bold text-lg text-gray-800 break-words">{event.title}</h4>
                                     <p className="text-gray-500 text-sm">{event.date} • {event.venue}</p>
                                 </div>
-                                <button
-                                    onClick={() => handleDelete(event._id)}
-                                    className="text-red-500 hover:text-red-700 font-medium text-sm px-3 py-1 rounded hover:bg-red-50 transition self-end sm:self-auto"
-                                >
-                                    Delete
-                                </button>
+                                <div className="flex gap-2 self-end sm:self-auto">
+                                    <button
+                                        onClick={() => handleEdit(event)}
+                                        className="text-primary-600 hover:text-primary-800 font-medium text-sm px-3 py-1 rounded hover:bg-primary-50 transition"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(event._id)}
+                                        className="text-red-500 hover:text-red-700 font-medium text-sm px-3 py-1 rounded hover:bg-red-50 transition"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         ))}
                         {events.length === 0 && <p className="p-8 text-center text-gray-400">No events found.</p>}
